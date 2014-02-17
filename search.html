@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>facebook search</title>
+    <style type="text/css">
+        body {
+        background-color:#cdcdcd;
+        }
+      div {
+            width:100%;
+        }
+       
+        #footer {
+            height:3%;
+            font-family: Helvetica Neue;
+            color: #9aa9c8;
+            font-size: 8pt;
+            background-color: #4c66a4;
+            text-align:center
+        }
+        .search_div {
+            text-align: center;
+            height: 200px;
+        }
+        .result_div {
+            height:67%;
+        }
+        .welcome_text {
+            font-family: Helvetica Neue;
+            color: #9aa9c8;
+            font-size: 36pt;
+            background-color: #4c66a4;
+        }
+        .display {
+            height:inherit;
+            margin-left:20px;
+        }
+        .search_input {
+            margin-top: 20px;
+        }
+        #searchBox {
+            width: 523px;
+            height: 25px;
+        }
+        #searchBtn {
+            height: 33px;
+            font-size: 10pt;
+            width: 115px;
+        }
+        ul{
+            list-style-type: none;
+            padding: 0px;
+            margin: 0px;
+        }       
+        .listItem {
+            height: 200px;
+            width: 600px;
+            float: inherit;
+            border: 5px solid #e3e3e3;
+            margin-left:auto;
+            margin-right:auto
+        }
+        .li_title {
+        }
+        .anchor_div {
+            display: inline;
+            float: left;
+            height: 135px;
+            margin-left: 10px;
+            position: relative;
+            text-align: left;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+<div id="fb-root"></div>
+<script>
+    // Load the Facebook SDK asynchronously    
+(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = document.location.protocol + "//connect.facebook.net/en_US/all.js#xfbml=1&status=0";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>    
+    <div id="Note" ><h4 style="color:crimson">This application will not work without a valid access Token.</h4>
+        <p>Fetch access token from <a href="https://developers.facebook.com/tools/explorer/" target="_blank"><em>here</em></a></p>
+        <label>Access Token: </label><input type="text" id="accessToken" onfocus="enableSearch();"/>
+    </div>
+<div class="search_div">
+    <div class="welcome_text">Facebook Search</div>
+    
+    <div class="search_input">   
+     <input type="text" id="searchBox" onfocus="checkAccessToken();"/>
+     <input type="button" name="Search" id="searchBtn" onclick="SearchFacebook();" value="search" />
+    </div>
+</div >  
+<div class="result_div">        
+    <div id="display">
+    </div>        
+</div>
+
+<div id="footer">
+<h3>Developed By: Kamlesh Kumar Jha</h3>
+</div>
+    <script type="text/javascript">  
+      
+        function checkAccessToken() {
+            if (!document.getElementById('accessToken').value) {
+                alert('Access token not specified!! Please fetch an access token.');
+                document.getElementById('searchBox').disabled = true;
+            }
+        }
+
+        function enableSearch() {
+            document.getElementById('searchBox').disabled = false;
+        }
+        //function for searching
+        function SearchFacebook()
+        {
+            var div_display = document.getElementById('display');
+            div_display.innerHTML = ""; // removing any previous message
+            var text = document.getElementById('searchBox').value;
+            //this FB api fetches result based on fql, access token is required
+    FB.api({
+        method: 'fql.query',
+        //access_token: 'CAACEdEose0cBAJu4ZA0zYheC5roAemIDp86hp1QkyhCZCAyxiNk8GRyiBKIZCS0GKv2BDnWrlZCeZCp8rYMhCEGd9DyFWJBjQhGX5320JMNx5r27KyLEMNDmHQnZB1OSyZBjgsZAQ5qOrHYn2x5YTbm2Vral7ZBQde5eNJeK0Kwp22eIoEnh0myrD9kZBgNxndVptcN7iQZDZD',
+        access_token:document.getElementById("accessToken").value,
+        query: "select page_id, website, name, pic, page_url from page where name='" + text + "'"
+    
+    }, function (response) {
+        console.log("Response from server: ");
+        console.log(response);
+        if (div_display.getElementsByTagName('ul').length > 0) {
+            div_display.removeChild(document.getElementById('searchList'));
+        }
+       if (response.length > 0) {
+                        var ul = document.createElement('ul');
+                        ul.id = "searchList";
+           //render facebook like button for searched result
+                        renderFBLike();
+                        for (var i = 0; i < response.length; i++) {
+                            ul.appendChild(createSearchItem(response[i]));
+                        }
+                       
+                        div_display.appendChild(ul);
+                    } else if (response.err_msg) {
+                        div_display.innerHTML = response.err_msg;
+                        console.log("error:" + response.err_msg);
+                    }else{
+                        div_display.innerHTML = "Sorry, No Data Found";
+                    }
+
+
+    });
+
+ 
+            
+  }
+
+     
+
+        // function for creating searched item 
+        function createSearchItem(data) {
+            var li = document.createElement('li');
+            li.className = "listItem";
+
+            var div = document.createElement('div');
+            div.className = "anchor_div";
+            var anchor_facebook = document.createElement('a');            
+            anchor_facebook.href = "https://www.facebook.com/" + data.page_id;
+            anchor_facebook.target = "_blank";
+            var img = document.createElement('img');
+            img.setAttribute("src", data.pic);
+            img.setAttribute('alt', "No Pic Available");           
+            var span_name = document.createElement('span');
+              span_name.className='li_title';
+              span_name.appendChild(document.createTextNode(data.name));
+            
+                var br1 = document.createElement('br');
+                var br2 = document.createElement('br');
+                anchor_facebook.appendChild(img);
+                anchor_facebook.appendChild(br1);
+                anchor_facebook.appendChild(span_name);
+                anchor_facebook.appendChild(br2);
+            
+            div.appendChild(anchor_facebook);
+            li.appendChild(div);
+            // check if website is available or not
+            if (data.website == null || data.website == "") {
+                var span = document.createElement('span').appendChild(document.createTextNode('Website not Available'));
+                li.appendChild(span);
+            } else {
+                var anchor_website = document.createElement('a');
+                //check for http if not present, add to url
+                data.website.indexOf("http") >= 0 ? anchor_website.href = data.website : anchor_website.href = "http://" + data.website;
+                anchor_website.target = "_blank";
+                anchor_website.appendChild(document.createTextNode('Go To Website'));
+                li.appendChild(anchor_website);
+            }
+            // add facebook like button
+            
+            var div_like = document.createElement('div');
+            div_like.id = data.page_id;
+            div_like.className = "fb-like";
+            div_like.setAttribute('data-width', '450');
+            div_like.setAttribute('data-href', "https://www.facebook.com/" + data.page_id);
+            div_like.setAttribute('data-colorscheme', 'light');
+            div_like.setAttribute('data-show-faces', 'false');
+
+            li.appendChild(div_like);
+            
+            return li;
+        }
+
+        //render fb like button
+        renderFBLike = function () {
+            //calling FB Api
+            FB.init({
+                status: false,                                 // Check Facebook Login status
+                xfbml: true                                  // Look for social plugins on the page
+                    });             
+
+        }
+        
+    </script>
+</body>
+</html>
