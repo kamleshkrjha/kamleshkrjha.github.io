@@ -1,0 +1,16 @@
+	.gameArea{
+			margin: 0 auto;
+			width: 50%;
+		}
+		.canvas{
+		    border:1px solid #d3d3d3;
+		    /*width: 50%;
+		    height:50%;*/
+		}
+		.hide{
+			display:none;
+		}
+.count{
+    font-size:20px;
+    font-weight:bold;
+}

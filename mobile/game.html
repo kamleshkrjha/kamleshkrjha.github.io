@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+ <link rel="stylesheet" type="text/css" href="game.css">
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+</head>
+<body>
+
+<div data-role="page">
+  <div data-role="header">
+    <h1>Welcome To My Homepage</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div class="gameArea">
+		<div id="controller">
+    		<input type="button" id="start" value="start"/>
+    		<input type="button" class="hide" id="exit" value="exit"/>
+    		<input type="button" class="hide" id="pause" value="pause"/>
+    		<input type="button" class="hide" id="resume" value="resume"/>
+		</div>
+		<canvas id="myCanvas" class="canvas" >
+		Your browser does not support the HTML5 canvas tag.
+		</canvas>
+    <div>
+        <label>Coins Collected: <span class="count">0</span></label>
+    </div>
+	</div>
+  </div>
+
+  <div data-role="footer">
+    <h1>Footer Text</h1>
+  </div>
+</div> 
+<script type="text/javascript" src="game.js"></script>
+</body>
+</html>
