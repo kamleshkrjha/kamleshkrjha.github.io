@@ -106,7 +106,8 @@ var initalizeGame=function(ctx, r){
 };
 
 function catcherNavEvents(){
-        $('canvas').on("swipeleft", function(){
+        $('body').on("swipeleft",".canvas", function(e){
+            e.preventDefault();
             if(catcher.x-catcher.dx>0){
                         catcher.clear();
                         catcher.x=catcher.x-catcher.dx;
@@ -114,7 +115,8 @@ function catcherNavEvents(){
                     }
         });
 
-        $('canvas').on("swiperight", function(){
+        $('body').on("swiperight",".canvas", function(e){
+            e.preventDefault();
              if(catcher.x+catcher.w+catcher.dx<canvas.width){
                         catcher.clear();
                         catcher.x=catcher.x+catcher.dx;
