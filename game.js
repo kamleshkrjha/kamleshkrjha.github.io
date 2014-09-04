@@ -188,7 +188,7 @@ Coin.prototype.create=function(){
         if(!this.lastPos)this.lastPos={}, this.lastPos.x=this.initialPos.x, this.lastPos.y=this.initialPos.y;       
         ctx.beginPath();
         ctx.arc(this.lastPos.x,this.lastPos.y,this.r,0,2*Math.PI);
-    this.isBomb?ctx.fillStyle="red":ctx.fillStyle="#E8BF19";
+    this.isBomb?ctx.fillStyle="red":ctx.fillStyle="gold";
         ctx.fill();
     
     };
@@ -254,6 +254,8 @@ Coin.prototype.move=function(){
 Coin.prototype.removeTimers=function(){
         if(this.timer)clearInterval(this.timer);
     };
+
+
 
     bindEvents(); 
 
