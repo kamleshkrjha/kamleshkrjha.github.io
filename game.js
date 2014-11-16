@@ -73,12 +73,10 @@ var bindEvents=function(){
         resume.addClass("hide");
         start.removeClass("hide");
         
-    });
-    
-   
+    }); 
 
 }
-
+bindEvents(); 
 var initalizeGame=function(ctx, r){
         ctx.clearRect(0,0,canvas.width, canvas.height);
         count=0;
@@ -88,12 +86,7 @@ var initalizeGame=function(ctx, r){
         for (var i = 0; i < noOfCoins; i++) {
             coins.push(new Coin({x:(r+gapBetweenCoins)*(i*2+1), y:-30}, r, getRandom(20)/2, ctx,getRandom(10)%3?false:true));
         }
-        /*coins.push(new Coin({x:30, y:-30}, r, 9, ctx,true)); // true for bombs
-        coins.push(new Coin({x:90, y:-30}, r, 10, ctx));
-        coins.push(new Coin({x:150, y:-30}, r, 5, ctx, true));
-        coins.push(new Coin({x:210, y:-30}, r, 4, ctx));
-        coins.push(new Coin({x:270, y:-30}, r, 0, ctx, true));
-        coins.push(new Coin({x:330, y:-30}, r, 5, ctx));*/
+      
     
         //create catcher
     
@@ -101,8 +94,13 @@ var initalizeGame=function(ctx, r){
         catcher.create();
     
          $(".count").text(count);
-         //bind event for catcher
-         $('body').on("keydown",function (evt) {
+         //bind event for catcher 
+    bindGameControls();
+};
+
+var bindGameControls=function(){
+    $('body').on("keydown",function (evt) {
+        console.log(evt.keyCode);
             switch (evt.keyCode) {
                 // Left arrow. 
                 case 37:
@@ -140,10 +138,15 @@ var initalizeGame=function(ctx, r){
                     }
                    
                     break;
+                case 32:
+                    //space bar for shoot                    
+                    var bullet=new Bullet(catcher.x, catcher.y);
+                    bullet.create();
+                    bullet.move();
+                    break;
             }
     });
 };
-
 var Catcher=function(){    
     this.w=2*(radiusOfCoin+gapBetweenCoins);
     this.h=3*(radiusOfCoin+gapBetweenCoins);
@@ -255,9 +258,42 @@ Coin.prototype.removeTimers=function(){
         if(this.timer)clearInterval(this.timer);
     };
 
+var Bullet=function(posX, posY){
+    var width=5;
+    var height=5;
+    this.x=posX,
+    this.y=posY;
+    this.timer;
+    this.getWidth=function(){return width};
+    this.getHeight=function(){return height};
+};
+
+Bullet.prototype.create=function(){
+    ctx.fillRect(this.x,this.y,this.getWidth(), this.getHeight());
+};
+Bullet.prototype.clear=function(){
+    ctx.clearRect(this.x,this.y, this.getWidth(), this.getHeight());
+};
+
+Bullet.prototype.removeTimers=function(){
+    if(this.timer)clearInterval(this.timer);
+};
+Bullet.prototype.move=function(){
+    this.timer=setInterval(function(){
+        this.clear();        
+        this.y=this.y-1;
+        if(this.y==0){
+            this.removeTimers();
+        }/*else if(){
+            
+        }*/else
+        this.create();
+    }.bind(this),0);
+};
 
 
-    bindEvents(); 
+
+    
 
 
 
