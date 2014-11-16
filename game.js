@@ -8,7 +8,7 @@ var canvas = document.getElementById("myCanvas");
     canvas.height=300;  
 var count;
 var ctx = myCanvas.getContext("2d");
-var coins;
+var coins, bullets;
 var catcher;
 var radiusOfCoin=10;
 var gapBetweenCoins=4;
@@ -38,8 +38,11 @@ var bindEvents=function(){
 
     pause.on("click", function(e){
         for (var i = 0; i < coins.length; i++) {
-            var _this=coins[i];
-            _this.removeTimers();
+            coins[i].removeTimers();
+            
+        }
+        for (var i = 0; i < bullets.length; i++) {
+            bullets[i].removeTimers();
             
         }
         $(this).addClass("hide");
@@ -48,19 +51,28 @@ var bindEvents=function(){
     });
 
     resume.on("click", function(e){
-        for (var i = 0; i < coins.length; i++) {
-            var _this=coins[i];
-            _this.move();
+        for (var i = 0; i < coins.length; i++) {            
+            coins[i].move();
+            
+        }
+        for (var i = 0; i < bullets.length; i++) {
+            bullets[i].move();
+            
+        }
             $(this).addClass("hide");
             pause.removeClass("hide");
             exit.removeClass("hide");
-        }
+        
     });
 
     exit.on("click", function(e){
         for (var i = 0; i < coins.length; i++) {
-            var _this=coins[i];
-            _this.removeTimers();           
+            coins[i].removeTimers();
+            
+        }
+        for (var i = 0; i < bullets.length; i++) {
+            bullets[i].removeTimers();
+            
         }
         ctx.clearRect(0,0,canvas.width, canvas.height);
         ctx.font="50px Georgia";
@@ -81,6 +93,7 @@ var initalizeGame=function(ctx, r){
         ctx.clearRect(0,0,canvas.width, canvas.height);
         count=0;
         coins=[];
+        bullets=[];
         //var r=10;
         var noOfCoins=canvas.width/(2*(r+gapBetweenCoins));
         for (var i = 0; i < noOfCoins; i++) {
@@ -140,7 +153,8 @@ var bindGameControls=function(){
                     break;
                 case 32:
                     //space bar for shoot                    
-                    var bullet=new Bullet(catcher.x, catcher.y);
+                    var bullet=new Bullet(catcher.x+catcher.w/2, catcher.y);
+                    bullets.push(bullet);
                     bullet.create();
                     bullet.move();
                     break;
@@ -195,6 +209,24 @@ Coin.prototype.create=function(){
         ctx.fill();
     
     };
+Coin.prototype.init=function(){
+    //ctx.clearRect(this.lastPos.x-this.r-5,this.lastPos.y-1-this.r-5,2*(this.r+5),2*(this.r+5));
+    if(typeof Object.create === "function"){
+        this.lastPos=Object.create(this.initialPos); 
+    }
+    else{
+        this.lastPos.x=this.initialPos.x;
+        this.lastPos.y=this.initialPos.y;
+    }
+    //bomb or coin and different delay
+    getRandom(20)%3?this.isBomb=false:this.isBomb=true; // this should also be decided randomly
+    this.delay=getRandom(10)/2;
+    //need to find a random delay
+    clearInterval(this.timer);
+    this.create();
+    this.move();
+};
+
 Coin.prototype.move=function(){
     //var that=this;
         this.timer=setInterval(function(){
@@ -202,20 +234,7 @@ Coin.prototype.move=function(){
             this.lastPos.y=this.lastPos.y+1;
             if(this.lastPos.y-this.r-1 > canvas.height){//if the coin has crossed the bottom line 
                 //console.log(this.initialPos); 
-                if(typeof Object.create === "function"){
-                this.lastPos=Object.create(this.initialPos); 
-                }
-                else{
-                    this.lastPos.x=this.initialPos.x;
-                    this.lastPos.y=this.initialPos.y;
-                }
-                //bomb or coin and different delay
-                getRandom(20)%3?this.isBomb=false:this.isBomb=true; // this should also be decided randomly
-                this.delay=getRandom(10)/2;
-                //need to find a random delay
-                clearInterval(this.timer);
-                this.create();
-                this.move();
+                this.init();
 
                 
             }else if(this.lastPos.y+this.r-1>=catcher.y && (this.lastPos.x+this.r>=catcher.x && this.lastPos.x-this.r<=catcher.x+catcher.w)){//if coin has contact with catcher, increase count and reset coins position
@@ -224,13 +243,13 @@ Coin.prototype.move=function(){
                    // alert("bomb explodede.. Game Over !!");
                     exit.trigger("click");                    
                     return;
-                }
-                   ctx.clearRect(this.lastPos.x-this.r-5,this.lastPos.y-1-this.r-5,2*(this.r+5),2*(this.r+5));
+                }                   
                 catcher.clear();
                 catcher.create();
                 count=count+1;
                 $(".count").text(count);
-                if(typeof Object.create === "function"){
+                this.init();
+                /*if(typeof Object.create === "function"){
                 this.lastPos=Object.create(this.initialPos); 
                 }
                 else{
@@ -243,7 +262,7 @@ Coin.prototype.move=function(){
                 //need to find a random delay
                 clearInterval(this.timer);
                 this.create();
-                this.move();
+                this.move();*/
              
             
             }
@@ -266,9 +285,12 @@ var Bullet=function(posX, posY){
     this.timer;
     this.getWidth=function(){return width};
     this.getHeight=function(){return height};
+    this.coinIndex=Math.floor(posX/(2*(radiusOfCoin+gapBetweenCoins)));
+    console.log(this.coinIndex);
 };
 
 Bullet.prototype.create=function(){
+    ctx.fillStyle="black";
     ctx.fillRect(this.x,this.y,this.getWidth(), this.getHeight());
 };
 Bullet.prototype.clear=function(){
@@ -278,15 +300,19 @@ Bullet.prototype.clear=function(){
 Bullet.prototype.removeTimers=function(){
     if(this.timer)clearInterval(this.timer);
 };
+ 
 Bullet.prototype.move=function(){
     this.timer=setInterval(function(){
         this.clear();        
         this.y=this.y-1;
         if(this.y==0){
             this.removeTimers();
-        }/*else if(){
-            
-        }*/else
+        }else if(this.y<=coins[this.coinIndex].lastPos.y+2*radiusOfCoin){
+            //kill this bullet and initialize that coin againcoins[this.coinIndex]
+            coins[this.coinIndex].clear();
+            coins[this.coinIndex].init();
+            this.removeTimers();
+        }else
         this.create();
     }.bind(this),0);
 };
