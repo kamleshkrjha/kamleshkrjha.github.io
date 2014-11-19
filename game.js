@@ -12,7 +12,8 @@ var coins, bullets;
 var catcher;
 var radiusOfCoin=10;
 var gapBetweenCoins=4;
-var start=$("#start"), pause=$("#pause"),resume=$("#resume"), exit=$("#exit");
+var isPaused=false;
+var start=$("#start"), exit=$("#exit");
 
 var getRandom=function(k){
 //get a random number here
@@ -31,39 +32,11 @@ var bindEvents=function(){
             _this.create();
             _this.move();
         }
-        $(this).addClass("hide");
-        pause.removeClass("hide");
+        $(this).addClass("hide");        
         exit.removeClass("hide");
     });
 
-    pause.on("click", function(e){
-        for (var i = 0; i < coins.length; i++) {
-            coins[i].removeTimers();
-            
-        }
-        for (var i = 0; i < bullets.length; i++) {
-            bullets[i].removeTimers();
-            
-        }
-        $(this).addClass("hide");
-        resume.removeClass("hide");
-        exit.removeClass("hide");
-    });
-
-    resume.on("click", function(e){
-        for (var i = 0; i < coins.length; i++) {            
-            coins[i].move();
-            
-        }
-        for (var i = 0; i < bullets.length; i++) {
-            bullets[i].move();
-            
-        }
-            $(this).addClass("hide");
-            pause.removeClass("hide");
-            exit.removeClass("hide");
-        
-    });
+    
 
     exit.on("click", function(e){
         for (var i = 0; i < coins.length; i++) {
@@ -81,8 +54,6 @@ var bindEvents=function(){
         coins=[];
         $('body').off("keydown");
         $(this).addClass("hide");
-        pause.addClass("hide");
-        resume.addClass("hide");
         start.removeClass("hide");
         
     }); 
@@ -113,7 +84,8 @@ var initalizeGame=function(ctx, r){
 
 var bindGameControls=function(){
     $('body').on("keydown",function (evt) {
-        console.log(evt.keyCode);
+        evt.preventDefault();
+        //console.log(evt.keyCode);
             switch (evt.keyCode) {
                 // Left arrow. 
                 case 37:
@@ -158,9 +130,36 @@ var bindGameControls=function(){
                     bullet.create();
                     bullet.move();
                     break;
+                case 13:
+                    //enter key play/pause
+                    if(isPaused){
+                    //resume
+                        isPaused=false;
+                        for (var i = 0; i < coins.length; i++) {            
+                            coins[i].move();
+
+                        }
+                        for (var i = 0; i < bullets.length; i++) {
+                            bullets[i].move();
+
+                        }
+                    }else{
+                    //pause
+                        isPaused=true;
+                        for (var i = 0; i < coins.length; i++) {
+                            coins[i].removeTimers();
+            
+                        }
+                        for (var i = 0; i < bullets.length; i++) {
+                            bullets[i].removeTimers();
+            
+                        }
+                    }
+                    break;
             }
     });
 };
+//player
 var Catcher=function(){    
     this.w=2*(radiusOfCoin+gapBetweenCoins);
     this.h=3*(radiusOfCoin+gapBetweenCoins);
@@ -186,6 +185,7 @@ var Catcher=function(){
     }
 };
 
+//object of game
 var Coin=function(initialPos, r, delay, ctx, isBomb){
     this.initialPos=initialPos;
     this.r=r;
@@ -277,16 +277,16 @@ Coin.prototype.removeTimers=function(){
         if(this.timer)clearInterval(this.timer);
     };
 
+// bullet object
 var Bullet=function(posX, posY){
-    var width=5;
-    var height=5;
+    var width=6;
+    var height=6;
     this.x=posX,
     this.y=posY;
     this.timer;
     this.getWidth=function(){return width};
     this.getHeight=function(){return height};
-    this.coinIndex=Math.floor(posX/(2*(radiusOfCoin+gapBetweenCoins)));
-    console.log(this.coinIndex);
+    this.coinIndex=Math.floor(posX/(2*(radiusOfCoin+gapBetweenCoins)));    
 };
 
 Bullet.prototype.create=function(){

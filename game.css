@@ -1,6 +1,10 @@
-	.gameArea{
+.mainDiv{
+    width:100%;    
+}
+
+.gameArea{
 			margin: 0 auto;
-			width: 50%;
+			width: 45%;
 		}
 		.canvas{
             background-color: #B2E6FF;
@@ -20,8 +24,18 @@ header {
     text-decoration: underline;
 }
 
+#controller{
+display: inline-block;
+width: 38%;
+}
+
+#score{
+    display: inline;
+}
+
 #instructions {
     text-align: center;
     color: green;
+    font-size: 20px; 
     
 }
