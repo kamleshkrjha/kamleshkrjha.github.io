@@ -308,7 +308,9 @@ Bullet.prototype.move=function(){
         if(this.y==0){
             this.removeTimers();
         }else if(this.y<=coins[this.coinIndex].lastPos.y+2*radiusOfCoin){
-            //kill this bullet and initialize that coin againcoins[this.coinIndex]
+            //kill this bullet and initialize that coin againcoins[this.coinIndex] add 2 points
+            count=count+2;
+            $(".count").text(count);
             coins[this.coinIndex].clear();
             coins[this.coinIndex].init();
             this.removeTimers();
