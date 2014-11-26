@@ -40,12 +40,14 @@ var bindEvents=function(){
         exit.removeClass("hide");
         level=0;
         levelTarget=0;
-       checkLevel();
+        checkLevel();
     });
 
     function checkLevel(){
     	if(levelTimer)clearTimeout(levelTimer);
         levelTarget += 30 + level*10;
+         $('.level').text(level+1);
+        $('.target').text(levelTarget);
         levelTimer=setTimeout(function(){
         	if(levelTarget > count){
         		//level failed
