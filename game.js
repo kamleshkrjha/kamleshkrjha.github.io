@@ -60,7 +60,8 @@ function resetClock(){
         levelTimer=setTimeout(function(){
         	if(levelTarget > count){
         		//level failed
-        		exit.trigger('click',['level failed']);
+        		var msg="level "+level+1+" failed";
+        		exit.trigger('click',[msg]);
         	}else{
         		//level complete
         		level +=1;
@@ -82,7 +83,7 @@ function resetClock(){
         ctx.font="50px Georgia";
         ctx.fillStyle="red";
         if(param1){
-        ctx.fillText("Game Over! "+param1,20,100);	
+        ctx.fillText(param1,20,100);	
         }else{
         ctx.fillText("Game Over! ",20,100);	
         }
