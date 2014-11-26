@@ -60,7 +60,7 @@ function resetClock(){
             if(levelTarget > count){
         		//level failed
                 var failedLevel=level+1;
-        		var msg="level "+failedLevel+" failed";
+        		var msg="level "+failedLevel+" uncomplete!";
                 console.log('level failed');
         		exit.trigger('click',[msg]);
         	}else{
