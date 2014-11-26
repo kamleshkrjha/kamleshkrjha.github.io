@@ -46,6 +46,7 @@ var bindEvents=function(){
     });
 function resetClock(){
 	clockTime=30;
+	$('.timeRemaining').text(clockTime);
 	clockTimer=setInterval(function(){
 		clockTime =clockTime-1;
 		$('.timeRemaining').text(clockTime);
