@@ -44,7 +44,7 @@ var bindEvents=function(){
         levelTarget=0;
         checkLevel();
     });
-function resetclock(){
+function resetClock(){
 	clockTime=30;
 	clockTimer=setInterval(function(){
 		clockTime =clockTime-1;
