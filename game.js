@@ -15,8 +15,10 @@ var gapBetweenCoins=4;
 var isPaused=false;
 var level=0;
 var levelTimer;
-var levelInterval=30000 //30 sec
+var levelInterval=30 //30 sec
 var levelTarget=0;
+var clockTimer;
+var clockTime;
 var start=$("#start"), exit=$("#exit");
 
 var getRandom=function(k){
@@ -42,8 +44,15 @@ var bindEvents=function(){
         levelTarget=0;
         checkLevel();
     });
-
-    function checkLevel(){
+function resetclock(){
+	clockTime=30;
+	clockTimer=setInterval(function(){
+		clockTime =clockTime-1;
+		$('.timeRemaining').text(clockTime);
+	},1000);	
+	}
+   function checkLevel(){
+    	resetClock();
     	if(levelTimer)clearTimeout(levelTimer);
         levelTarget += 30 + level*10;
          $('.level').text(level+1);
@@ -57,7 +66,7 @@ var bindEvents=function(){
         		level +=1;
         		checkLevel();
         	}
-        },levelInterval);
+        },levelInterval*1000);
     }
 
     exit.on("click", function(e,param1){
@@ -83,6 +92,7 @@ var bindEvents=function(){
         $(this).addClass("hide");
         start.removeClass("hide");
         if(levelTimer)clearTimeout(levelTimer);
+        if(clockTimer)clearInterval(clockTimer);
     }); 
 
 }
