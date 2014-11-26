@@ -41,37 +41,44 @@ var bindEvents=function(){
         $(this).addClass("hide");        
         exit.removeClass("hide");
         level=0;
-        levelTarget=0;
-        checkLevel();
+        levelTarget=0;        
+        resetClock();
     });
 function resetClock(){
+    if(clockTimer)clearInterval(clockTimer);
 	clockTime=30;
-	$('.timeRemaining').text(clockTime);
-	clockTimer=setInterval(function(){
-		clockTime =clockTime-1;
-		$('.timeRemaining').text(clockTime);
-	},1000);	
-	}
-   function checkLevel(){
-    	resetClock();
-    	if(levelTimer)clearTimeout(levelTimer);
-        levelTarget += 30 + level*10;
+    levelTarget += 30 + level*10;
          $('.level').text(level+1);
         $('.target').text(levelTarget);
-        levelTimer=setTimeout(function(){
-        	if(levelTarget > count){
+	$('.timeRemaining').text(clockTime);
+	clockTimer=setInterval(function(){
+		if(clockTime < 0){
+         clearInterval(clockTimer);
+            return;
+        }
+        if(clockTime == 0){
+            if(levelTarget > count){
         		//level failed
-        		var msg="level "+level+1+" failed";
+                var failedLevel=level+1;
+        		var msg="level "+failedLevel+" failed";
+                console.log('level failed');
         		exit.trigger('click',[msg]);
         	}else{
         		//level complete
-        		level +=1;
-        		checkLevel();
+        		level +=1;        		
+                resetClock();
         	}
-        },levelInterval*1000);
-    }
+        }else{
+            clockTime =clockTime-1;
+		  $('.timeRemaining').text(clockTime);
+        }
+	},1000);	
+	}
+ 
 
     exit.on("click", function(e,param1){
+        if(levelTimer)clearTimeout(levelTimer);
+        if(clockTimer)clearInterval(clockTimer);
         for (var i = 0; i < coins.length; i++) {
             coins[i].removeTimers();
             
@@ -93,8 +100,7 @@ function resetClock(){
         $('body').off("keydown");
         $(this).addClass("hide");
         start.removeClass("hide");
-        if(levelTimer)clearTimeout(levelTimer);
-        if(clockTimer)clearInterval(clockTimer);
+        
     }); 
 
 }
@@ -348,7 +354,7 @@ Bullet.prototype.move=function(){
             this.removeTimers();
         }else if(this.y<=coins[this.coinIndex].lastPos.y+2*radiusOfCoin){
             //kill this bullet and initialize that coin againcoins[this.coinIndex] add 2 points
-            count=count+2;
+            coins[this.coinIndex].isBomb?count=count+2:count=count-1;            
             $(".count").text(count);
             coins[this.coinIndex].clear();
             coins[this.coinIndex].init();
