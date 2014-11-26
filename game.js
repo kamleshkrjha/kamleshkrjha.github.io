@@ -13,6 +13,10 @@ var catcher;
 var radiusOfCoin=10;
 var gapBetweenCoins=4;
 var isPaused=false;
+var level=0;
+var levelTimer;
+var levelInterval=30000 //30 sec
+var levelTarget=0;
 var start=$("#start"), exit=$("#exit");
 
 var getRandom=function(k){
@@ -34,11 +38,27 @@ var bindEvents=function(){
         }
         $(this).addClass("hide");        
         exit.removeClass("hide");
+        level=0;
+        levelTarget=0;
+       checkLevel();
     });
 
-    
+    function checkLevel(){
+    	if(levelTimer)clearTimeout(levelTimer);
+        levelTarget += 30 + level*10;
+        levelTimer=setTimeout(function(){
+        	if(levelTarget > count){
+        		//level failed
+        		exit.trigger('click',['level failed']);
+        	}else{
+        		//level complete
+        		level +=1;
+        		checkLevel();
+        	}
+        },levelInterval);
+    }
 
-    exit.on("click", function(e){
+    exit.on("click", function(e,param1){
         for (var i = 0; i < coins.length; i++) {
             coins[i].removeTimers();
             
@@ -50,12 +70,17 @@ var bindEvents=function(){
         ctx.clearRect(0,0,canvas.width, canvas.height);
         ctx.font="50px Georgia";
         ctx.fillStyle="red";
-        ctx.fillText("Game Over!",20,100);
+        if(param1){
+        ctx.fillText("Game Over! "+param1,20,100);	
+        }else{
+        ctx.fillText("Game Over! ",20,100);	
+        }
+        
         coins=[];
         $('body').off("keydown");
         $(this).addClass("hide");
         start.removeClass("hide");
-        
+        if(levelTimer)clearTimeout(levelTimer);
     }); 
 
 }
