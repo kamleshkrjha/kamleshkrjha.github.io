@@ -12,7 +12,7 @@ var coins, bullets;
 var catcher;
 var radiusOfCoin=10;
 var gapBetweenCoins=4;
-var isPaused=false;
+var isPaused;
 var level=0;
 var levelTimer;
 var levelInterval=30 //30 sec
@@ -41,7 +41,8 @@ var bindEvents=function(){
         $(this).addClass("hide");        
         exit.removeClass("hide");
         level=0;
-        levelTarget=0;        
+        levelTarget=0;  
+        isPaused=false;
         resetClock();
     });
 function resetClock(){
@@ -52,6 +53,7 @@ function resetClock(){
         $('.target').text(levelTarget);
 	$('.timeRemaining').text(clockTime);
 	clockTimer=setInterval(function(){
+        if(isPaused)return;
 		if(clockTime < 0){
          clearInterval(clockTimer);
             return;
