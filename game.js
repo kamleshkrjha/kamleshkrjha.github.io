@@ -12,7 +12,7 @@ var coins, bullets;
 var catcher;
 var radiusOfCoin=10;
 var gapBetweenCoins=4;
-var isPaused=false;
+var isPaused;
 var level=0;
 var levelTimer;
 var levelInterval=30 //30 sec
@@ -39,6 +39,25 @@ function showMessage(msg,isComplete){
     },1000);
 }
 
+<<<<<<< HEAD
+=======
+
+var bindEvents=function(){
+    start.on("click", function(e){  
+        initalizeGame(ctx, radiusOfCoin);
+        for (var i = 0; i < coins.length; i++) {
+            var _this=coins[i];
+            _this.create();
+            _this.move();
+        }
+        $(this).addClass("hide");        
+        exit.removeClass("hide");
+        level=0;
+        levelTarget=0;  
+        isPaused=false;
+        resetClock();
+    });
+>>>>>>> origin/master
 function resetClock(){
     if(clockTimer)clearInterval(clockTimer);
 	clockTime=30;
@@ -47,6 +66,7 @@ function resetClock(){
         $('.target').text(levelTarget);
 	$('.timeRemaining').text(clockTime);
 	clockTimer=setInterval(function(){
+        if(isPaused)return;
 		if(clockTime < 0){
          clearInterval(clockTimer);
             return;
