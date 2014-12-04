@@ -3,18 +3,18 @@
 }
 
 .gameArea{
-			margin: 0 auto;
-			width: 45%;
-		}
-		.canvas{
-            background-color: #B2E6FF;
-		    border:1px solid #d3d3d3;
-		    /*width: 100%;
-		    height:300px;*/
-		}
-		.hide{
-			display:none;
-		}
+    margin: 0 auto;
+	width: 45%;
+}
+.canvas{
+        background-color: #B2E6FF;
+		border:1px solid #d3d3d3;
+		/*width: 100%;
+        height:300px;*/
+}
+.hide{
+    display:none;
+}
 #score span{
     font-size:20px;
     font-weight:bold;
@@ -38,4 +38,16 @@ width: 10%;
     color: green;
     font-size: 20px; 
     
+}
+
+.flash{
+    display: none;
+    position: absolute;
+    z-index: 9999;
+    font-size: 30;
+    font-family: cursive;   
+}
+
+.flash span{
+padding-left: 10px;
 }

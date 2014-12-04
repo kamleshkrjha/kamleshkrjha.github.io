@@ -28,22 +28,17 @@ return Math.random(i);*/
 return Math.floor(Math.random()*k+1);
 };
 
+function showMessage(msg,isComplete){
+    var flashMsg=$('.flash');
+    var $canvas=$('#myCanvas');
+    flashMsg.css({ top:$canvas.offset().top+$canvas.height()/2, left:$canvas.offset().left}).show();
+    isComplete?flashMsg.css('color','green'):flashMsg.css('color','red');
+    flashMsg.find('span').text(msg);
+    setTimeout(function(){
+        flashMsg.hide();
+    },1000);
+}
 
-
-var bindEvents=function(){
-    start.on("click", function(e){  
-        initalizeGame(ctx, radiusOfCoin);
-        for (var i = 0; i < coins.length; i++) {
-            var _this=coins[i];
-            _this.create();
-            _this.move();
-        }
-        $(this).addClass("hide");        
-        exit.removeClass("hide");
-        level=0;
-        levelTarget=0;        
-        resetClock();
-    });
 function resetClock(){
     if(clockTimer)clearInterval(clockTimer);
 	clockTime=30;
@@ -60,12 +55,13 @@ function resetClock(){
             if(levelTarget > count){
         		//level failed
                 var failedLevel=level+1;
-        		var msg="level "+failedLevel+" incomplete!";
+                showMessage('Level '+failedLevel+' Not complete!',false);
                 console.log('level failed');
-        		exit.trigger('click',[msg]);
+        		exit.trigger('click');
         	}else{
-        		//level complete
-        		level +=1;        		
+        		//level complete                
+        		level +=1;
+                showMessage("Level "+level+' completed !', true);
                 resetClock();
         	}
         }else{
@@ -74,7 +70,21 @@ function resetClock(){
         }
 	},1000);	
 	}
- 
+
+var bindEvents=function(){
+    start.on("click", function(e){  
+        initalizeGame(ctx, radiusOfCoin);
+        for (var i = 0; i < coins.length; i++) {
+            var _this=coins[i];
+            _this.create();
+            _this.move();
+        }
+        $(this).addClass("hide");        
+        exit.removeClass("hide");
+        level=0;
+        levelTarget=0;        
+        resetClock();
+    });
 
     exit.on("click", function(e,param1){
         if(levelTimer)clearTimeout(levelTimer);
@@ -88,7 +98,7 @@ function resetClock(){
             
         }
         ctx.clearRect(0,0,canvas.width, canvas.height);
-        ctx.font="50px Georgia";
+        ctx.font="40px Georgia";
         ctx.fillStyle="red";
         if(param1){
         ctx.fillText(param1,20,100);	
