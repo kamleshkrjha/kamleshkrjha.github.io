@@ -23,8 +23,6 @@ var start=$("#start"), exit=$("#exit");
 
 var getRandom=function(k){
 //get a random number here
-/*console.log(Math.random(i));
-return Math.random(i);*/
 return Math.floor(Math.random()*k+1);
 };
 
@@ -115,7 +113,9 @@ var bindEvents=function(){
     }); 
 
 }
+
 bindEvents(); 
+
 var initalizeGame=function(ctx, r){
         ctx.clearRect(0,0,canvas.width, canvas.height);
         count=0;
@@ -131,8 +131,7 @@ var initalizeGame=function(ctx, r){
         //create catcher
     
         catcher=new Catcher();
-        catcher.create();
-    
+        catcher.create();    
          $(".count").text(count);
          //bind event for catcher 
     bindGameControls();
@@ -304,23 +303,7 @@ Coin.prototype.move=function(){
                 catcher.create();
                 count=count+1;
                 $(".count").text(count);
-                this.init();
-                /*if(typeof Object.create === "function"){
-                this.lastPos=Object.create(this.initialPos); 
-                }
-                else{
-                    this.lastPos.x=this.initialPos.x;
-                    this.lastPos.y=this.initialPos.y;
-                }
-                //bomb or coin and different delay
-                getRandom(20)%3?this.isBomb=false:this.isBomb=true; // this should also be decided randomly
-                this.delay=getRandom(10)/2;
-                //need to find a random delay
-                clearInterval(this.timer);
-                this.create();
-                this.move();*/
-             
-            
+                this.init();  
             }
             else{                
                 //this.lastPos.y=this.lastPos.y+1;
