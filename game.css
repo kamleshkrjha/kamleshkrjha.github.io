@@ -51,3 +51,10 @@ width: 10%;
 .flash span{
 padding-left: 10px;
 }
+
+.top5Scores {
+  float: right;
+  margin-right: 100px;
+  width: 250px;
+  background: #d3d3d3;
+}

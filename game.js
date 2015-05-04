@@ -6,7 +6,7 @@
 var canvas = document.getElementById("myCanvas");
     canvas.width=360;
     canvas.height=300;  
-var count;
+var count; // score
 var ctx = myCanvas.getContext("2d");
 var coins, bullets;
 var catcher;
@@ -20,7 +20,30 @@ var levelTarget=0;
 var clockTimer;
 var clockTime;
 var start=$("#start"), exit=$("#exit");
+var lsKey = 'topScores';
 
+//load top 5 scores for this player 
+(function() {
+if(localStorage){
+  if(!localStorage[lsKey]){    
+  var topScores = {
+  top5 : []
+  }
+  localStorage[lsKey] = JSON.stringify(topScores);
+  } else { 
+  showTop5();
+  }
+}
+}());
+function showTop5() {
+  //top 5 sorted in descending order
+var top5 = JSON.parse(localStorage[lsKey]).top5;
+  var li="";
+  $.each(top5, function(index, score){
+  li += "<li>"+score+"</li>";
+  });
+  $('.top5').html(li);
+}
 var getRandom=function(k){
 //get a random number here
 return Math.floor(Math.random()*k+1);
@@ -109,7 +132,17 @@ var bindEvents=function(){
         $('body').off("keydown");
         $(this).addClass("hide");
         start.removeClass("hide");
-        
+        // update top 5 scores
+        var top5 = JSON.parse(localStorage[lsKey]).top5;
+        if(top5.length < 5 || count > top5[4]){
+          top5.push(count);
+          top5.sort(function(a,b){return b-a;});
+          if(top5.length > 5){
+          top5.splice(5, 1);
+          }
+        }
+        localStorage[lsKey] = JSON.stringify({top5: top5});
+        showTop5();
     }); 
 
 }
