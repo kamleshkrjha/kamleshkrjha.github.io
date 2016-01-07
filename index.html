@@ -1,38 +1,72 @@
+<DOCTYPE !html>
 <html>
 <head>
 	<title>Game</title>
-    <link rel="stylesheet" type="text/css" href="game.css">
+    <!-- <link rel="stylesheet" type="text/css" href="reset.css"> -->
+    <link rel="stylesheet" type="text/css" href="game2.css">
 	<script type="text/javascript" src="vendor/jquery.js"></script>	
     
 	
 </head>
-<body>
-    <div class="flash"><span>Flash Message</span></div>
-    <header align="center"><h2>Game using canvas, javascript and jquery</h2>
+<body>    
+    <header class="header"><h2 class="text">Game using canvas, javascript and jquery</h2>
     </header>
-    <div id="instructions">
-            <p>  collect <span style="color:gold">gold</span> coins and avoid <span style="color:red">red</span> coins, shoot <span style="color:red">red</span> coins  to get 2 points, 1 point gets deducted if you shoot <span style="color:gold">gold</span>
-                <br>Navigations-->
-                left: left arrow, 
-                right: right arrow, 
-                jump: up arrow,
-                shoot: space
-                <br>
-                press Enter key to pause/resume
-           </p>
+    <div class="game-menu">
+  
+        <nav class='vertical-align-middle'>
+            <ul>
+              <li class='nav-item active'>Game 1</li>
+              <li class='nav-item'>Game 2</li>
+              <li class='nav-item'>Game 3</li>
+              <li class='nav-item'>Game 4</li>
+              <li class='nav-item'>Game 5</li>
+            </ul>
+              
+        </nav>
+    </div>
+    <div class="middle-section">
+    <div id="instructions" class="instruction-panel">
+        <ol>
+            <b>Instructions: </b>
+            <li>Collect <span style="color:gold">gold</span> coins for 1 point.
+            </li>
+            <li> Collision with <span style="color:red">red</span> coins will end the game. 
+            </li>
+            <li> Shoot <span style="color:red">red</span> coins  to get 2 points, 1 point gets deducted if you shoot <span style="color:gold">gold</span>
+            </li>
+            <li>Game will be over if you fail to reach the target for the level.</li>
+        </ol>
+        <ol>
+            <b>Navigations: </b>
+            <li>
+                left: left arrow.
+            </li>
+            <li> right: right arrow </li>
+            <li> jump: up arrow</li>
+            <li>shoot: space </li>
+            <li>
+            press Enter key to pause/resume
+            </li>
+        </ol>
+            
         </div>
-    <div class="mainDiv" style="position:absolute">
+    <div class="mainDiv" >
         <div class="gameArea">
+            <div id="score">
+                <label>Level: <span class="level">0</span></label>
+                <label> Target: <span class="target">0</span> </label>
+                <label>Score: <span class="count">0</span></label>
+                <!-- <label>Coins Collected: <span class="count">0</span>/<span class="target">0</span></label> -->
+            <!--<label>Target: <span class="target">0</span></label>-->
+            
+            <label>Time Remaining(in sec): <span class="timeRemaining"></span></label>
+            </div>
+
             <div id="controller">
                 <input type="button" id="start" value="start"/>
                 <input type="button" class="hide" id="exit" value="exit"/>                
             </div>
-            <div id="score">
-            <label>Coins Collected: <span class="count">0</span>/<span class="target">0</span></label>
-            <!--<label>Target: <span class="target">0</span></label>-->
-            <label>Level: <span class="level">0</span></label>
-            <label>Time Remaining(in sec): <span class="timeRemaining"></span></label>
-            </div>
+            
             <canvas id="myCanvas" class="canvas" >
             Your browser does not support the HTML5 canvas tag.
             </canvas>    
@@ -44,11 +78,13 @@
    <ul class="top5">   
    </ul>
  </div>
+ </div>
+ <footer> Developed By: Kamlesh  </footer>
+  <!-- flash message container -->
+<div class="flash"><span>Flash Message</span></div>
 
-	<script type="text/javascript">
-         
-    </script>
-    <script type="text/javascript" src="game.js"></script>
+    <script type="text/javascript" src="game2.js"></script>
 
 </body>
 </html>
+

@@ -1,42 +1,101 @@
+* {
+    /* including borders as part of box for every element */
+    box-sizing: border-box;
+}
+.header {
+    height: 14%;
+    text-decoration: underline;
+    text-align: center;
+    background-color: #BFAFB2;
+    margin-bottom: 10px;
+}
+
+.header .text {
+    padding-top: 15px;
+}
+
+.game-menu {
+  white-space: nowrap;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch; 
+  background-color: #888;
+  margin-bottom: 20px;
+  height: 7%;
+}
+
+
+.nav-item:not(:last-child) {
+  /*border-right: 1px solid rgba(114, 124, 135, 0.2);*/
+  margin-right: 10px;
+}
+
+nav {
+  font-size: 0;
+  padding: 13px 16px 12px;
+}
+
+.nav-item {
+  font-size: 18px;
+}
+
+.nav-item,
+.vertical-align-middle {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.nav-item.active {
+    color: #fff;
+    cursor: auto;
+}
+
+.middle-section{
+height: 70%;
+}
+
 .mainDiv{
-    width:100%;    
+    width:45%;  
+    float: left;  
 }
 
 .gameArea{
     margin: 0 auto;
-	width: 45%;
+	width: 100%;
 }
 .canvas{
         background-color: #B2E6FF;
 		border:1px solid #d3d3d3;
-		/*width: 100%;
-        height:300px;*/
+		/*width: 90%;
+        height:90%;*/
 }
 .hide{
     display:none;
 }
+
 #score span{
     font-size:20px;
     font-weight:bold;
 }
-header {
-    height: 10%;
-    text-decoration: underline;
-}
+
 
 #controller{
-display: inline-block;
+/*display: inline-block;*/
 width: 10%;
 }
 
 #score{
-    display: inline;
+    /*display: inline;*/
+    margin-bottom: 20px;
 }
 
-#instructions {
-    text-align: center;
+.instruction-panel {
+    /*text-align: center;
     color: green;
-    font-size: 20px; 
+    font-size: 20px; */
+    width: 39%;
+    float: left;
+    font-size: 18px;
     
 }
 
@@ -54,7 +113,15 @@ padding-left: 10px;
 
 .top5Scores {
   float: right;
-  margin-right: 100px;
-  width: 250px;
+  margin-right: 50px;
+  width: 10%;
   background: #d3d3d3;
+  font-size: 20px;
+}
+footer {
+    height: 5%;
+    text-align: center;
+    background-color: #888;
+    line-height: 2;
+    font-style: italic;
 }
