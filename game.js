@@ -1,11 +1,6 @@
-/*$(function(){
-   
-
-});*/
-
 var canvas = document.getElementById("myCanvas");
-    canvas.width=360;
-    canvas.height=300;  
+    canvas.width=420;
+    canvas.height=360;  
 var count; // score
 var ctx = myCanvas.getContext("2d");
 var coins, bullets;
@@ -35,18 +30,28 @@ if(localStorage){
   }
 }
 }());
+
+$('.nav-item').on('click', function (e) {
+    // load different bindGameControls
+    var $this = $(this);
+    if(!$this.hasClass('active')){
+        $this.addClass('active');
+        $this.siblings().removeClass('active');
+    }
+})
 function showTop5() {
   //top 5 sorted in descending order
-var top5 = JSON.parse(localStorage[lsKey]).top5;
+    var top5 = JSON.parse(localStorage[lsKey]).top5;
   var li="";
   $.each(top5, function(index, score){
   li += "<li>"+score+"</li>";
   });
   $('.top5').html(li);
 }
+
 var getRandom=function(k){
-//get a random number here
-return Math.floor(Math.random()*k+1);
+    //get a random number here
+    return Math.floor(Math.random()*k+1);
 };
 
 function showMessage(msg,isComplete){
@@ -62,36 +67,36 @@ function showMessage(msg,isComplete){
 
 function resetClock(){
     if(clockTimer)clearInterval(clockTimer);
-	clockTime=30;
+    clockTime=30;
     levelTarget += 30 + level*10;
          $('.level').text(level+1);
         $('.target').text(levelTarget);
-	$('.timeRemaining').text(clockTime);
-	clockTimer=setInterval(function(){
+    $('.timeRemaining').text(clockTime);
+    clockTimer=setInterval(function(){
         if(isPaused)return;
-		if(clockTime < 0){
+        if(clockTime < 0){
          clearInterval(clockTimer);
             return;
         }
         if(clockTime == 0){
             if(levelTarget > count){
-        		//level failed
+                //level failed
                 var failedLevel=level+1;
                 showMessage('Level '+failedLevel+' Not complete!',false);
                 console.log('level failed');
-        		exit.trigger('click');
-        	}else{
-        		//level complete                
-        		level +=1;
+                exit.trigger('click');
+            }else{
+                //level complete                
+                level +=1;
                 showMessage("Level "+level+' completed !', true);
                 resetClock();
-        	}
+            }
         }else{
             clockTime =clockTime-1;
-		  $('.timeRemaining').text(clockTime);
+          $('.timeRemaining').text(clockTime);
         }
-	},1000);	
-	}
+    },1000);    
+    }
 
 var bindEvents=function(){
     start.on("click", function(e){  
@@ -123,9 +128,9 @@ var bindEvents=function(){
         ctx.font="40px Georgia";
         ctx.fillStyle="red";
         if(param1){
-        ctx.fillText(param1,20,100);	
+        ctx.fillText(param1,20,100);    
         }else{
-        ctx.fillText("Game Over! ",20,100);	
+        ctx.fillText("Game Over! ",20,100); 
         }
         
         coins=[];
@@ -150,23 +155,23 @@ var bindEvents=function(){
 bindEvents(); 
 
 var initalizeGame=function(ctx, r){
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-        count=0;
-        coins=[];
-        bullets=[];
-        //var r=10;
-        var noOfCoins=canvas.width/(2*(r+gapBetweenCoins));
-        for (var i = 0; i < noOfCoins; i++) {
-            coins.push(new Coin({x:(r+gapBetweenCoins)*(i*2+1), y:-30}, r, getRandom(20)/2, ctx,getRandom(10)%3?false:true));
-        }
-      
-    
-        //create catcher
-    
-        catcher=new Catcher();
-        catcher.create();    
-         $(".count").text(count);
-         //bind event for catcher 
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    count=0;
+    coins=[];
+    bullets=[];
+    //var r=10;
+    var noOfCoins=canvas.width/(2*(r+gapBetweenCoins));
+    for (var i = 0; i < noOfCoins; i++) {
+        coins.push(new Coin({x:(r+gapBetweenCoins)*(i*2+1), y:-30}, r, getRandom(20)/2, ctx,getRandom(10)%3?false:true));
+    }
+  
+
+    //create catcher
+
+    catcher=new Catcher();
+    catcher.create();    
+     $(".count").text(count);
+     //bind event for catcher 
     bindGameControls();
 };
 
@@ -177,8 +182,10 @@ var bindGameControls=function(){
             switch (evt.keyCode) {
                 // Left arrow. 
                 case 37:
-                    
-                    if(catcher.x-catcher.dx>0){
+                    if(isPaused){
+                        return false;
+                    }
+                    if(catcher.x-catcher.dx>=0){
                         catcher.clear();
                         catcher.x=catcher.x-catcher.dx;
                         catcher.create();
@@ -187,6 +194,9 @@ var bindGameControls=function(){
                     break;
                 // up arrow
                 case 38:
+                    if(isPaused){
+                        return false;
+                    }
                     if(catcher.y === canvas.height-catcher.h){
                         catcher.clear();
                         catcher.y=catcher.y-2*catcher.dx;
@@ -204,7 +214,10 @@ var bindGameControls=function(){
 
                 // Right arrow. 
                 case 39:
-                    if(catcher.x+catcher.w+catcher.dx<canvas.width){
+                    if(isPaused){
+                        return false;
+                    }
+                    if(catcher.x+catcher.w+catcher.dx<=canvas.width){
                         catcher.clear();
                         catcher.x=catcher.x+catcher.dx;
                         catcher.create();
@@ -212,6 +225,9 @@ var bindGameControls=function(){
                    
                     break;
                 case 32:
+                    if(isPaused){
+                        return false;
+                    }
                     //space bar for shoot                    
                     var bullet=new Bullet(catcher.x+catcher.w/2, catcher.y);
                     bullets.push(bullet);
@@ -248,12 +264,16 @@ var bindGameControls=function(){
     });
 };
 //player
-var Catcher=function(){    
+var Catcher=function(){
+
     this.w=2*(radiusOfCoin+gapBetweenCoins);
     this.h=3*(radiusOfCoin+gapBetweenCoins);
-    this.x=canvas.width/2-this.w/2,
-    this.y=canvas.height-this.h,
-    this.dx=20, //can be equal to this.w
+    // this.x=canvas.width/2-this.w/2,
+    // this.y=canvas.height-this.h,
+    var median = parseInt(canvas.width/(2*this.w));   
+    this.x = median*this.w;
+    this.y = canvas.height-this.h;
+    this.dx=this.w, //can be equal to this.w
     this.create=function(){
         ctx.fillStyle="#3399FF";
 
@@ -354,7 +374,7 @@ var Bullet=function(posX, posY){
     var width=6;
     var height=6;
     this.x=posX,
-    this.y=posY;
+    this.y=posY-height; // initial postion should be catcher y - height of bullet
     this.timer;
     this.getWidth=function(){return width};
     this.getHeight=function(){return height};
@@ -398,5 +418,5 @@ Bullet.prototype.move=function(){
 
 
 
-	
-	
+    
+    
