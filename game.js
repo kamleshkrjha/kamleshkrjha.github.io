@@ -1,4 +1,4 @@
-(function ($) {
+(function () {
     var canvas = document.getElementById("myCanvas");
     canvas.width=420;
     canvas.height=360;
@@ -15,7 +15,7 @@
     var levelTarget=0;
     var clockTimer;
     var clockTime;
-    var start=$("#start"), exit=$("#exit");
+    var start=document.querySelector("#start"), exit=document.querySelector("#exit");
     var lsKey = 'topScores';
 
 //load top 5 scores for this player
@@ -32,37 +32,63 @@
         }
     }());
 
-    $('.nav-item').on('click', function (e) {
+    document.querySelector('.nav-items').addEventListener('click', function (e) {
         // load different bindGameControls
-        var $this = $(this);
-        if(!$this.hasClass('active')){
-            $this.addClass('active');
-            $this.siblings().removeClass('active');
+        var navItem = e.srcElement;
+        e.preventDefault();
+        console.log(navItem);
+        if(!navItem.classList.contains('active')){
+            navItem.classList.add('active');
+            getAllNextSiblings(navItem).concat(getAllPreviousSiblings(navItem)).forEach(function (sibling) {
+                sibling.classList.remove('active');
+            });
         }
-    })
+    });
+
+    function getAllNextSiblings (element) {
+        var siblings = [];
+        while(element.nextElementSibling) {
+            element = element.nextElementSibling;
+            siblings.push(element);
+        }
+        return siblings;
+    }
+
+    function getAllPreviousSiblings (element) {
+        var siblings = [];
+        while(element.previousElementSibling) {
+            element = element.previousElementSibling;
+            siblings.push(element);
+        }
+        return siblings;
+    }
+
     function showTop5() {
         //top 5 sorted in descending order
         var top5 = JSON.parse(localStorage[lsKey]).top5;
         var li="";
-        $.each(top5, function(index, score){
+        top5.forEach(function (score) {
             li += "<li>"+score+"</li>";
         });
-        $('.top5').html(li);
+        document.querySelector('.top5').innerHTML = li;
     }
 
-    var getRandom=function(k){
+    function getRandom(k){
         //get a random number here
         return Math.floor(Math.random()*k+1);
     };
 
     function showMessage(msg,isComplete){
-        var flashMsg=$('.flash');
-        var $canvas=$('#myCanvas');
-        flashMsg.css({ top:$canvas.offset().top+$canvas.height()/2, left:$canvas.offset().left}).show();
-        isComplete?flashMsg.css('color','green'):flashMsg.css('color','red');
-        flashMsg.find('span').text(msg);
+        var flashMsg=document.querySelector('.flash');
+        var canvas=document.querySelector('#myCanvas');
+        //flashMsg.css({ top:$canvas.offset().top+$canvas.height()/2, left:$canvas.offset().left}).show();
+        flashMsg.style.top = canvas.offsetTop + canvas.height/2;
+        flashMsg.style.left = canvas.offsetLeft;
+        flashMsg.style.display = 'block';
+        isComplete ? flashMsg.style.color = 'green' : flashMsg.style.color = 'red';
+        flashMsg.querySelector('span').innerText = msg;
         setTimeout(function(){
-            flashMsg.hide();
+            flashMsg.style.display = 'none';
         },1000);
     }
 
@@ -70,9 +96,9 @@
         if(clockTimer)clearInterval(clockTimer);
         clockTime=30;
         levelTarget += 30 + level*10;
-        $('.level').text(level+1);
-        $('.target').text(levelTarget);
-        $('.timeRemaining').text(clockTime);
+        document.querySelector('.level').innerText = level+1;
+        document.querySelector('.target').innerText = levelTarget;
+        document.querySelector('.timeRemaining').innerText = clockTime;
         clockTimer=setInterval(function(){
             if(isPaused)return;
             if(clockTime < 0){
@@ -85,7 +111,7 @@
                     var failedLevel=level+1;
                     showMessage('Level '+failedLevel+' Not complete!',false);
                     console.log('level failed');
-                    exit.trigger('click');
+                    exit.click();
                 }else{
                     //level complete
                     level +=1;
@@ -94,27 +120,27 @@
                 }
             }else{
                 clockTime =clockTime-1;
-                $('.timeRemaining').text(clockTime);
+                document.querySelector('.timeRemaining').innerText = clockTime;
             }
         },1000);
     }
 
-    var bindEvents=function(){
-        start.on("click", function(e){
+    function bindEvents(){
+        start.addEventListener("click", function(e){
             initalizeGame(ctx, radiusOfCoin);
             for (var i = 0; i < coins.length; i++) {
                 var _this=coins[i];
                 _this.create();
                 _this.move();
             }
-            $(this).addClass("hide");
-            exit.removeClass("hide");
+            this.classList.add('hide');
+            exit.classList.remove('hide');
             level=0;
             levelTarget=0;
             resetClock();
         });
 
-        exit.on("click", function(e,param1){
+        exit.addEventListener("click", function(e,param1){
             if(levelTimer)clearTimeout(levelTimer);
             if(clockTimer)clearInterval(clockTimer);
             for (var i = 0; i < coins.length; i++) {
@@ -135,9 +161,9 @@
             }
 
             coins=[];
-            $('body').off("keydown");
-            $(this).addClass("hide");
-            start.removeClass("hide");
+            document.body.removeEventListener("keydown", onBodyKeydown);
+            this.classList.add("hide");
+            start.classList.remove("hide");
             // update top 5 scores
             var top5 = JSON.parse(localStorage[lsKey]).top5;
             if(top5.length < 5 || count > top5[4]){
@@ -155,7 +181,7 @@
 
     bindEvents();
 
-    var initalizeGame=function(ctx, r){
+    function initalizeGame(ctx, r){
         ctx.clearRect(0,0,canvas.width, canvas.height);
         count=0;
         coins=[];
@@ -171,98 +197,100 @@
 
         catcher=new Catcher();
         catcher.create();
-        $(".count").text(count);
+        document.querySelector(".count").innerText = count;
         //bind event for catcher
         bindGameControls();
     };
 
-    var bindGameControls=function(){
-        $('body').on("keydown",function (evt) {
-            evt.preventDefault();
-            //console.log(evt.keyCode);
-            switch (evt.keyCode) {
-                // Left arrow.
-                case 37:
-                    if(isPaused){
-                        return false;
-                    }
-                    if(catcher.x-catcher.dx>=0){
+    function onBodyKeydown(evt) {
+        evt.preventDefault();
+        //console.log(evt.keyCode);
+        switch (evt.keyCode) {
+            // Left arrow.
+            case 37:
+                if(isPaused){
+                    return false;
+                }
+                if(catcher.x-catcher.dx>=0){
+                    catcher.clear();
+                    catcher.x=catcher.x-catcher.dx;
+                    catcher.create();
+                }
+
+                break;
+            // up arrow
+            case 38:
+                if(isPaused){
+                    return false;
+                }
+                if(catcher.y === canvas.height-catcher.h){
+                    catcher.clear();
+                    catcher.y=catcher.y-2*catcher.dx;
+                    catcher.create();
+                    var jumpTimer=setTimeout(function(){
                         catcher.clear();
-                        catcher.x=catcher.x-catcher.dx;
+                        catcher.y=catcher.y+2*catcher.dx;
                         catcher.create();
+                        //clearTimeout(jumpTimer);
+                    },200);
+
+                }
+
+                break;
+
+            // Right arrow.
+            case 39:
+                if(isPaused){
+                    return false;
+                }
+                if(catcher.x+catcher.w+catcher.dx<=canvas.width){
+                    catcher.clear();
+                    catcher.x=catcher.x+catcher.dx;
+                    catcher.create();
+                }
+
+                break;
+            case 32:
+                if(isPaused){
+                    return false;
+                }
+                //space bar for shoot
+                var bullet=new Bullet(catcher.x+catcher.w/2, catcher.y);
+                bullets.push(bullet);
+                bullet.create();
+                bullet.move();
+                break;
+            case 13:
+                //enter key play/pause
+                if(isPaused){
+                    //resume
+                    isPaused=false;
+                    for (var i = 0; i < coins.length; i++) {
+                        coins[i].move();
+
                     }
-
-                    break;
-                // up arrow
-                case 38:
-                    if(isPaused){
-                        return false;
-                    }
-                    if(catcher.y === canvas.height-catcher.h){
-                        catcher.clear();
-                        catcher.y=catcher.y-2*catcher.dx;
-                        catcher.create();
-                        var jumpTimer=setTimeout(function(){
-                            catcher.clear();
-                            catcher.y=catcher.y+2*catcher.dx;
-                            catcher.create();
-                            //clearTimeout(jumpTimer);
-                        },200);
+                    for (var i = 0; i < bullets.length; i++) {
+                        bullets[i].move();
 
                     }
+                }else{
+                    //pause
+                    isPaused=true;
+                    for (var i = 0; i < coins.length; i++) {
+                        coins[i].removeTimers();
 
-                    break;
-
-                // Right arrow.
-                case 39:
-                    if(isPaused){
-                        return false;
                     }
-                    if(catcher.x+catcher.w+catcher.dx<=canvas.width){
-                        catcher.clear();
-                        catcher.x=catcher.x+catcher.dx;
-                        catcher.create();
+                    for (var i = 0; i < bullets.length; i++) {
+                        bullets[i].removeTimers();
+
                     }
+                }
+                break;
+        }
+    }
 
-                    break;
-                case 32:
-                    if(isPaused){
-                        return false;
-                    }
-                    //space bar for shoot
-                    var bullet=new Bullet(catcher.x+catcher.w/2, catcher.y);
-                    bullets.push(bullet);
-                    bullet.create();
-                    bullet.move();
-                    break;
-                case 13:
-                    //enter key play/pause
-                    if(isPaused){
-                        //resume
-                        isPaused=false;
-                        for (var i = 0; i < coins.length; i++) {
-                            coins[i].move();
-
-                        }
-                        for (var i = 0; i < bullets.length; i++) {
-                            bullets[i].move();
-
-                        }
-                    }else{
-                        //pause
-                        isPaused=true;
-                        for (var i = 0; i < coins.length; i++) {
-                            coins[i].removeTimers();
-
-                        }
-                        for (var i = 0; i < bullets.length; i++) {
-                            bullets[i].removeTimers();
-
-                        }
-                    }
-                    break;
-            }
-        });
+    function bindGameControls(){
+        document.body.addEventListener("keydown", onBodyKeydown);
     };
 //player
     var Catcher=function(){
@@ -350,13 +378,13 @@
                 if(this.isBomb){
                     //GameOver
                     // alert("bomb explodede.. Game Over !!");
-                    exit.trigger("click");
+                    exit.click();
                     return;
                 }
                 catcher.clear();
                 catcher.create();
                 count=count+1;
-                $(".count").text(count);
+                document.querySelector(".count").innerText = count;
                 this.init();
             }
             else{
@@ -403,7 +431,7 @@
             }else if(this.y<=coins[this.coinIndex].lastPos.y+2*radiusOfCoin){
                 //kill this bullet and initialize that coin againcoins[this.coinIndex] add 2 points
                 coins[this.coinIndex].isBomb?count=count+2:count=count-1;
-                $(".count").text(count);
+                document.querySelector(".count").innerText = count;
                 coins[this.coinIndex].clear();
                 coins[this.coinIndex].init();
                 this.removeTimers();
@@ -411,7 +439,7 @@
                 this.create();
         }.bind(this),0);
     };
-})($);
+})();
 
 
 
