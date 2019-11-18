@@ -1,0 +1,126 @@
+* {
+    /* including borders as part of box for every element */
+    box-sizing: border-box;
+}
+.header {
+    height: 100px;
+    background-color: #313131;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    width: 100px;
+    height: 80%;
+    border-radius: 40px;
+    display: flex;
+    margin-right: 50px;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 24px;
+}
+
+.game-menu {
+  white-space: nowrap;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch; 
+}
+
+.nav-items {
+    display: flex;
+    font-size: 0;
+    padding: 13px 16px 12px;
+}
+
+.nav-item {
+  font-size: 16px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px;
+  list-style: none;
+}
+
+.nav-item.active {
+    color: #000000;
+    cursor: auto;
+    background-color: white;
+}
+
+.middle-section{
+    display: flex;
+    justify-content: space-between;
+}
+
+.mainDiv{
+     width: 60%;
+}
+
+.top5Scores {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+ul.top5 {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul.top5 li {
+    margin: 0 10px;
+}
+
+.canvas{
+        background-color: #B2E6FF;
+		border:1px solid #d3d3d3;
+}
+.hide{
+    display:none;
+}
+
+.score-panel label {
+    margin-right: 10px;
+}
+.score-panel span{
+    font-size:20px;
+    font-weight:bold;
+}
+
+
+
+.instruction-panel {
+    width: 30%;
+}
+
+.flash{
+    display: none;
+    position: absolute;
+    z-index: 9999;
+    font-size: 30;   
+}
+
+.flash span{
+    padding-left: 10px;
+}
+
+footer {
+    height: 5%;
+    width: 100%;
+    text-align: center;
+    background-color: #888;
+    line-height: 2;
+    font-style: italic;
+    position: fixed;
+    bottom: 0;
+}
+
