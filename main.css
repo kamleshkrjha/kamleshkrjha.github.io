@@ -8,7 +8,6 @@
     margin-bottom: 10px;
     display: flex;
     align-items: center;
-    padding: 0 20px;
 }
 
 .logo {
@@ -19,10 +18,11 @@
     height: 80%;
     border-radius: 40px;
     display: flex;
-    margin-right: 50px;
+    margin-right: 20px;
     align-items: center;
     justify-content: space-around;
     font-size: 24px;
+    margin-left: 20px;
 }
 
 .game-menu {
@@ -54,11 +54,35 @@
 
 .middle-section{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+}
+
+.instruction-panel {
+    width: 40%;
+    padding: 20px;
+}
+
+ul {
+    list-style: none;
+}
+
+.instruction-panel--nav {
+    display: flex;
+    align-items: center;
+}
+
+.instruction-panel--nav img{
+    width: 100px;
+    height: 50px;
 }
 
 .mainDiv{
-     width: 60%;
+    display: flex;
+    flex-direction: column;
+    /* margin-left: 20px; */
+    width: 60%;
+    padding: 20px;
+    position: relative;
 }
 
 .top5Scores {
@@ -67,27 +91,39 @@
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 10px;
+    position: relative;
 }
 
-ul.top5 {
+.top5 {
     display: flex;
-    list-style: none;
     padding: 0;
     margin: 0;
 }
 
-ul.top5 li {
+.top5 li {
     margin: 0 10px;
 }
 
-.canvas{
-        background-color: #B2E6FF;
-		border:1px solid #d3d3d3;
+.game-area {
+    position: relative;
 }
+
+.canvas{
+    background-color: #B2E6FF;
+    border:1px solid #d3d3d3;
+    position: relative;
+    /* width: 100%; */
+    /* height: 500px; */
+}
+
 .hide{
     display:none;
 }
-
+.score-panel {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
 .score-panel label {
     margin-right: 10px;
 }
@@ -96,17 +132,20 @@ ul.top5 li {
     font-weight:bold;
 }
 
-
-
-.instruction-panel {
-    width: 30%;
-}
+ /* #controller {
+    position: absolute;
+    right: 0;
+    top: -30px;
+} */
 
 .flash{
     display: none;
     position: absolute;
     z-index: 9999;
-    font-size: 30;   
+    font-size: 30;  
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);  
 }
 
 .flash span{
@@ -124,3 +163,11 @@ footer {
     bottom: 0;
 }
 
+@media only screen and (max-width: 767px) {
+    .instruction-panel {
+        display: none;
+    }
+    .mainDiv {
+        width: 100%;
+    }
+}
